@@ -1,0 +1,5 @@
+interface:
+  display_name: "Dashi Taskboard"
+  short_description: "在 Codex 內開啟繁中 Taskboard"
+  brand_color: "#2563EB"
+  default_prompt: "使用 $open-taskboard 開啟 Dashi Taskboard。"

@@ -61,6 +61,17 @@ ln -s /absolute/path/to/codex-taskboard/skills/manage-taskboard \
 
 桌面 App 會讓該目錄與內建 Skill 保持同步。該 Skill 會指導 Codex 檢查議題，將其移到 `in_progress`，使用樂觀版本控制，驗證工作，然後將其移到 `in_review`；只有在使用者明確確認接受或要求將議題標記為完成後，才會將議題移到 `done`。
 
+## 安裝 Codex Plugin
+
+這個 fork 也包含本機 Codex plugin marketplace：`.agents/plugins`。如果你想要 Codex 左側入口，而不是每次到這個資料夾輸入指令，可以安裝這個 plugin：
+
+```bash
+codex plugin marketplace add qwe29530523/dashi-taskboard-zh-TW --ref main
+codex plugin add dashi-taskboard@dashi-taskboard
+```
+
+安裝後，在 Codex 左側的 Plugins 或 Skills 區域選擇 Dashi Taskboard。`$open-taskboard` skill 會啟動本機 launcher；如果找不到本機 checkout，會先把這個 fork 下載到使用者 cache，第一次使用時也會視需要安裝依賴，然後在 Codex 裡開啟繁體中文 Taskboard UI。
+
 ## 嵌入 Codex
 
 ### 手動：使用專用 CDP 埠

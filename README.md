@@ -61,6 +61,17 @@ ln -s /absolute/path/to/codex-taskboard/skills/manage-taskboard \
 
 The desktop app keeps this same directory synchronized with its bundled Skill. The Skill teaches Codex to inspect an issue, move it to `in_progress`, use optimistic versions, verify the work, and then move it to `in_review`; it moves the issue to `done` only after the user explicitly confirms acceptance or asks to mark it complete.
 
+## Install the Codex Plugin
+
+This fork also includes a local Codex plugin marketplace at `.agents/plugins`. Install it when you want a left-sidebar Codex entry instead of running commands from this repository folder:
+
+```bash
+codex plugin marketplace add qwe29530523/dashi-taskboard-zh-TW --ref main
+codex plugin add dashi-taskboard@dashi-taskboard
+```
+
+After installation, open the Plugins or Skills area in the Codex sidebar and choose Dashi Taskboard. The `$open-taskboard` skill starts the local launcher, downloads this fork into the user's cache if no checkout is available, installs dependencies on first use if needed, and opens the Traditional Chinese Taskboard UI in Codex.
+
 ## Embed in Codex
 
 ### Manual: use a dedicated CDP port

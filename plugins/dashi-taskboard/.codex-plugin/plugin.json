@@ -1,0 +1,32 @@
+{
+  "name": "dashi-taskboard",
+  "version": "0.1.0+codex.20260829080809",
+  "description": "Open the Traditional Chinese Dashi Taskboard UI inside Codex.",
+  "author": {
+    "name": "qwe29530523",
+    "url": "https://github.com/qwe29530523"
+  },
+  "homepage": "https://github.com/qwe29530523/dashi-taskboard-zh-TW",
+  "repository": "https://github.com/qwe29530523/dashi-taskboard-zh-TW",
+  "license": "Apache-2.0",
+  "keywords": [
+    "taskboard",
+    "codex",
+    "zh-TW"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Dashi Taskboard",
+    "shortDescription": "Open your Traditional Chinese Taskboard in Codex.",
+    "longDescription": "Dashi Taskboard starts the local Taskboard launcher and opens the Traditional Chinese task board UI inside Codex, without requiring a terminal command from the project folder.",
+    "developerName": "qwe29530523",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive"
+    ],
+    "defaultPrompt": [
+      "\u4f7f\u7528 $open-taskboard \u958b\u555f Dashi Taskboard\u3002"
+    ],
+    "brandColor": "#2563EB"
+  }
+}
