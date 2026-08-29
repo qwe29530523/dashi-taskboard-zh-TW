@@ -159,13 +159,13 @@ jobs:
         run: |
           set -euo pipefail
           if [[ "$TAG_CREATED" != "true" || "$TAG_DELETED" == "true" || "$TAG_FORCED" == "true" ]]; then
-            echo "发布标签必须是首次创建，不能删除或强制更新。" >&2
+            echo "釋出標籤必須是首次建立，不能刪除或強制更新。" >&2
             exit 1
           fi
           git fetch --no-tags origin main
           TAG_COMMIT="$(git rev-parse "$RELEASE_TAG^{}")"
           if [[ "$TAG_COMMIT" != "$GITHUB_SHA" ]]; then
-            echo "标签提交与当前工作流提交不一致。" >&2
+            echo "標籤提交與當前工作流提交不一致。" >&2
             exit 1
           fi
           git merge-base --is-ancestor "$TAG_COMMIT" origin/main
@@ -175,7 +175,7 @@ jobs:
             REMOTE_TAG_COMMIT="$(git ls-remote origin "refs/tags/$RELEASE_TAG" | awk 'NR == 1 { print $1 }')"
           fi
           if [[ "$REMOTE_TAG_COMMIT" != "$GITHUB_SHA" ]]; then
-            echo "远程发布标签与当前工作流提交不一致。" >&2
+            echo "遠端釋出標籤與當前工作流提交不一致。" >&2
             exit 1
           fi
 
@@ -183,11 +183,11 @@ jobs:
           CARGO_VERSION="$(node -e 'const fs=require("fs"); const source=fs.readFileSync("src-tauri/Cargo.toml","utf8"); console.log(source.match(/^version = "([^"]+)"/m)[1])')"
           TAURI_VERSION="$(node -p "require('./src-tauri/tauri.conf.json').version")"
           if [[ "$PACKAGE_VERSION" != "$CARGO_VERSION" || "$PACKAGE_VERSION" != "$TAURI_VERSION" ]]; then
-            echo "package.json、Cargo.toml 和 tauri.conf.json 的版本必须一致。" >&2
+            echo "package.json、Cargo.toml 和 tauri.conf.json 的版本必須一致。" >&2
             exit 1
           fi
           if [[ "$RELEASE_TAG" != "v$PACKAGE_VERSION" ]]; then
-            echo "发布标签必须与应用版本一致。" >&2
+            echo "釋出標籤必須與應用版本一致。" >&2
             exit 1
           fi
 
@@ -199,17 +199,17 @@ jobs:
             --header "Authorization: Bearer $GH_TOKEN" \
             --header "X-GitHub-Api-Version: 2022-11-28" \
             "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/releases/tags/$RELEASE_TAG")"; then
-            echo "无法确认 Release 是否存在。" >&2
+            echo "無法確認 Release 是否存在。" >&2
             exit 1
           fi
           case "$RELEASE_STATUS" in
             404) ;;
             200)
-              echo "该标签或版本已存在 Release。" >&2
+              echo "該標籤或版本已存在 Release。" >&2
               exit 1
               ;;
             *)
-              echo "查询 Release 失败，HTTP $RELEASE_STATUS。" >&2
+              echo "查詢 Release 失敗，HTTP $RELEASE_STATUS。" >&2
               exit 1
               ;;
           esac
@@ -530,12 +530,12 @@ jobs:
           API_VERSION_HEADER="X-GitHub-Api-Version: 2026-03-10"
           PACKAGE_VERSION="$(node -p "require('./package.json').version")"
           if [[ "$(git rev-parse HEAD)" != "$GITHUB_SHA" || "$RELEASE_TAG" != "v$PACKAGE_VERSION" ]]; then
-            echo "promotion checkout、标签和应用版本不一致。" >&2
+            echo "promotion checkout、標籤和應用版本不一致。" >&2
             exit 1
           fi
 
           if [[ -z "$RULESET_TOKEN" ]]; then
-            echo "缺少 RELEASE_RULESET_TOKEN，无法确认标签 Ruleset 的绕过者。" >&2
+            echo "缺少 RELEASE_RULESET_TOKEN，無法確認標籤 Ruleset 的繞過者。" >&2
             exit 1
           fi
           if ! RULESET_IDS="$(GH_TOKEN="$RULESET_TOKEN" gh api \
@@ -543,7 +543,7 @@ jobs:
             --paginate \
             "repos/$GITHUB_REPOSITORY/rulesets?targets=tag&per_page=100" \
             --jq '.[].id')"; then
-            echo "无法读取标签 Ruleset。" >&2
+            echo "無法讀取標籤 Ruleset。" >&2
             exit 1
           fi
 
@@ -553,7 +553,7 @@ jobs:
             if ! RULESET="$(GH_TOKEN="$RULESET_TOKEN" gh api \
               --header "$API_VERSION_HEADER" \
               "repos/$GITHUB_REPOSITORY/rulesets/$RULESET_ID")"; then
-              echo "无法读取标签 Ruleset $RULESET_ID。" >&2
+              echo "無法讀取標籤 Ruleset $RULESET_ID。" >&2
               exit 1
             fi
             if jq -e --arg tag_ref "refs/tags/$RELEASE_TAG" '
@@ -582,18 +582,18 @@ jobs:
             fi
           done <<< "$RULESET_IDS"
           if [[ "$TAG_RULE_PROTECTED" != "true" ]]; then
-            echo "发布前必须启用覆盖当前标签的规则：exclude 为空、禁止更新和删除，并且 bypass_actors 字段可见且为空。" >&2
+            echo "釋出前必須啟用覆蓋當前標籤的規則：exclude 為空、禁止更新和刪除，並且 bypass_actors 欄位可見且為空。" >&2
             exit 1
           fi
 
           if ! IMMUTABLE_RELEASES="$(GH_TOKEN="$RULESET_TOKEN" gh api \
             --header "$API_VERSION_HEADER" \
             "repos/$GITHUB_REPOSITORY/immutable-releases")"; then
-            echo "仓库必须在 promotion 前启用 immutable releases。" >&2
+            echo "倉庫必須在 promotion 前啟用 immutable releases。" >&2
             exit 1
           fi
           if ! jq -e '.enabled == true' <<< "$IMMUTABLE_RELEASES" >/dev/null; then
-            echo "仓库的 immutable releases 未启用。" >&2
+            echo "倉庫的 immutable releases 未啟用。" >&2
             exit 1
           fi
 
@@ -623,7 +623,7 @@ jobs:
             '[.[] | select(.tag_name == $tag and .draft == true)] | if length == 1 then .[0] else empty end' \
             <<< "$RELEASES")"
           if [[ -z "$DRAFT_RELEASE" ]]; then
-            echo "找不到唯一的目标 Draft Release。" >&2
+            echo "找不到唯一的目標 Draft Release。" >&2
             exit 1
           fi
           if ! jq -e \
@@ -631,7 +631,7 @@ jobs:
             --arg target "$GITHUB_SHA" \
             '.tag_name == $tag and .target_commitish == $target and .draft == true' \
             <<< "$DRAFT_RELEASE" >/dev/null; then
-            echo "promotion 只能处理指向构建提交的 Draft Release。" >&2
+            echo "promotion 只能處理指向構建提交的 Draft Release。" >&2
             exit 1
           fi
 
@@ -692,7 +692,7 @@ jobs:
             '[.[] | select(.tag_name == $tag and .draft == true)] | if length == 1 then .[0] else empty end' \
             <<< "$RELEASES")"
           if [[ -z "$DRAFT_RELEASE" ]]; then
-            echo "找不到唯一的目标 Draft Release。" >&2
+            echo "找不到唯一的目標 Draft Release。" >&2
             exit 1
           fi
           EXPECTED_ASSET_COUNT="$(wc -l < "$MANIFEST_PATH" | tr -d ' ')"
@@ -707,7 +707,7 @@ jobs:
              (.assets | length) == $asset_count and
              all(.assets[]; .state == "uploaded")' \
             <<< "$DRAFT_RELEASE" >/dev/null; then
-            echo "发布前 Draft Release 或资产集合发生变化。" >&2
+            echo "釋出前 Draft Release 或資產集合發生變化。" >&2
             exit 1
           fi
 
@@ -717,7 +717,7 @@ jobs:
               --arg digest "sha256:$SHA256" \
               'any(.assets[]; .name == $name and .digest == $digest)' \
               <<< "$DRAFT_RELEASE" >/dev/null; then
-              echo "发布前资产 $ASSET_NAME 的 SHA-256 与构建 manifest 不一致。" >&2
+              echo "釋出前資產 $ASSET_NAME 的 SHA-256 與構建 manifest 不一致。" >&2
               exit 1
             fi
           done < "$MANIFEST_PATH"
@@ -727,7 +727,7 @@ jobs:
             REMOTE_TAG_COMMIT="$(git ls-remote origin "refs/tags/$RELEASE_TAG" | awk 'NR == 1 { print $1 }')"
           fi
           if [[ "$REMOTE_TAG_COMMIT" != "$GITHUB_SHA" ]]; then
-            echo "发布前远程标签与构建提交不一致。" >&2
+            echo "釋出前遠端標籤與構建提交不一致。" >&2
             exit 1
           fi
 
@@ -759,7 +759,7 @@ jobs:
              .immutable == true and
              (.assets | length) == $asset_count' \
             <<< "$FINAL_RELEASE" >/dev/null; then
-            echo "最终 Release 未发布、未锁定或资产集合不正确。" >&2
+            echo "最終 Release 未釋出、未鎖定或資產集合不正確。" >&2
             exit 1
           fi
 
@@ -769,7 +769,7 @@ jobs:
               --arg digest "sha256:$SHA256" \
               'any(.assets[]; .name == $name and .digest == $digest)' \
               <<< "$FINAL_RELEASE" >/dev/null; then
-              echo "最终资产 $ASSET_NAME 的 SHA-256 与构建 manifest 不一致。" >&2
+              echo "最終資產 $ASSET_NAME 的 SHA-256 與構建 manifest 不一致。" >&2
               exit 1
             fi
           done < "$MANIFEST_PATH"

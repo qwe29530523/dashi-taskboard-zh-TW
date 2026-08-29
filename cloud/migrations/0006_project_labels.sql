@@ -1,5 +1,5 @@
 ALTER TABLE projects
-ADD COLUMN labels TEXT NOT NULL DEFAULT '["缺陷","特性","for-claude","hold","改进","phase-1","phase-2","phase-3","phase-4","phase-5","phase-6"]';
+ADD COLUMN labels TEXT NOT NULL DEFAULT '["缺陷","特性","for-claude","hold","改進","phase-1","phase-2","phase-3","phase-4","phase-5","phase-6"]';
 
 WITH catalog AS (
   SELECT
@@ -7,7 +7,7 @@ WITH catalog AS (
     default_labels.value AS label,
     0 AS source_order,
     printf('%08d', default_labels.key) AS label_order
-  FROM projects, json_each('["缺陷","特性","for-claude","hold","改进","phase-1","phase-2","phase-3","phase-4","phase-5","phase-6"]') AS default_labels
+  FROM projects, json_each('["缺陷","特性","for-claude","hold","改進","phase-1","phase-2","phase-3","phase-4","phase-5","phase-6"]') AS default_labels
 
   UNION ALL
 

@@ -6,6 +6,6 @@ name = "codex-taskboard"
 script = ""
 
 [[actions]]
-name = "启动"
+name = "啟動"
 icon = "run"
 command = "npm run codex"
